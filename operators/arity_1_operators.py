@@ -20,8 +20,8 @@ class OneArityOperator(Operator, ABC):
 
 
 class TrigonometricOperator(OneArityOperator, ABC):
-    def __init__(self, e):
-        super().__init__(e)
+    def __init__(self, zero_operator):
+        super().__init__(zero_operator)
         self.phase = self.random.uniform(0, math.pi)
         self.freq = self.random.uniform(1.0, 6)
 
@@ -43,21 +43,11 @@ class Tent(OneArityOperator):
         return 1 - 2 * abs(col)
 
 
-# class Phi(OneArityOperator):
-#     def func(self, col):
-#         return (1 + math.erf(col / math.sqrt(2))) - 1
-
-
 class Sin(TrigonometricOperator):
     sort_key = 6
 
     def func(self, col):
         return math.sin(self.phase + self.freq * col)
-
-
-# class Cos(TrigonometricOperator):
-#     def func(self, col):
-#         return math.cos(self.phase + self.freq * col)
 
 
 __all__ = operator_subclass_names(locals())

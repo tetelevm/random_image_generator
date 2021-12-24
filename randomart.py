@@ -1,31 +1,32 @@
-# version 1.0.1
+# version 1.0.2
 
 from implementers import *
 
 
-def _get_deeps(preset_deep: str | int) -> list[int]:
-    if preset_deep != "all":
-        return [int(preset_deep)]
+def _get_complexities(preset_complexity: str | int) -> list[int]:
+    if preset_complexity != "all":
+        return [int(preset_complexity)]
 
-    deeps = [
-        *range(1, Generator.deep_interval[0]),
-        *range(*Generator.deep_interval, 2),
+    complexities = [
+        *range(1, Generator.complexity_interval[0]),
+        *range(*Generator.complexity_interval, 2),
     ]
-    return deeps
+    return complexities
 
 
 def main():
     image_manager = ImageManager()
-    preset_deep = image_manager.args.deep
+    input_complexity = image_manager.args.complexity
     generator = Generator(image_manager.args.size)
 
     for phrase in image_manager.phrases:
-        deeps = _get_deeps(preset_deep or Generator.get_random_deep(phrase))
+        preset_complexity = input_complexity or Generator.get_complexity(phrase)
+        complexities = _get_complexities(preset_complexity)
 
         dir_name = image_manager.create_folder(phrase)
-        for deep in deeps:
-            image_name = dir_name / f"{deep}.png"
-            image = generator(phrase, deep)
+        for complexity in complexities:
+            image_name = dir_name / f"{complexity}.png"
+            image = generator(phrase, complexity)
             image.save(image_name)
 
         print(f"phrase <{phrase}> has been generated into <{dir_name.name}>")

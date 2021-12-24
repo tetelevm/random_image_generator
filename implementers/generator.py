@@ -1,55 +1,60 @@
 from random import Random
 from PIL import Image
 
-from operators import OperatorManager
+from operators import OperatorManager, Operator
 
 
 __all__ = ["Generator"]
 
 
 class Generator:
-    operators_plain = OperatorManager.get_operators_plain()
-    operators_complex = OperatorManager.get_operators_complex()
-    deep_interval = [20, 150]
+    operators_flat = OperatorManager.get_operators_flat()
+    operators_dimensional = OperatorManager.get_operators_dimensional()
+    complexity_interval = [20, 150]
 
     def __init__(self, size: int = 256):
         self.size = size
         self.random = Random()
 
     @classmethod
-    def get_random_deep(cls, phrase: str) -> int:
+    def get_complexity(cls, phrase: str) -> int:
         random_local = Random(phrase)
-        return random_local.randint(*cls.deep_interval)
+        return random_local.randint(*cls.complexity_interval)
 
-    def generate_image(self, phrase: str, deep: int) -> Image:
+    def __call__(self, phrase: str, complexity: int) -> Image:
         self.random = Random(phrase)
         OperatorManager.set_random(self.random)
-        art = self.generate_art(deep)
-
+        art = self.generate_art(complexity)
         return self.draw(art)
 
-    def generate_art(self, deep):
-        if deep <= 0:
-            plain_operator = self.random.choice(self.operators_plain)
+    def generate_art(self, complexity: int) -> Operator:
+        if complexity <= 0:
+            plain_operator = self.random.choice(self.operators_flat)
             return plain_operator()
 
-        operator = self.random.choice(self.operators_complex)
-        i = 0
-        args = []
+        operator = self.random.choice(self.operators_dimensional)
+        sub_complexities = [
+            self.random.randrange(complexity)
+            for _ in range(operator.arity - 1)
+        ]
 
-        ops = [self.random.randrange(deep) for _ in range(operator.arity - 1)]
-        for j in sorted(ops):
-            args.append(self.generate_art(j - i))
-            i = j
-        args.append(self.generate_art(deep - 1 - i))
-        return operator(*args)
+        suboperators = []
+        last_complexity = 0
+        for curr_complexity in sorted(sub_complexities):
+            suboperator = self.generate_art(curr_complexity - last_complexity)
+            suboperators.append(suboperator)
+            last_complexity = curr_complexity
+
+        suboperators.append(self.generate_art(complexity - 1 - last_complexity))
+
+        return operator(*suboperators)
 
     @staticmethod
-    def normalize_color(r, g, b):
-        val = lambda x: max(1, min(255, int(128 * (x + 1))))
-        return (val(r), val(g), val(b))
+    def normalize_color(r: float, g: float, b: float) -> tuple[int, int, int]:
+        to_col = lambda x: max(1, min(255, int(128 * (x + 1))))
+        return (to_col(r), to_col(g), to_col(b))
 
-    def draw(self, art) -> Image:
+    def draw(self, art: Operator) -> Image:
         img = Image.new('RGB', (self.size, self.size))
         for x in range(self.size):
             for y in range(self.size):

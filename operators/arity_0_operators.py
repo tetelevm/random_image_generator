@@ -8,16 +8,6 @@ class ZeroArityOperator(Operator, ABC):
     arity = 0
 
 
-# class PositionOperator(ZeroArityOperator, ABC):
-#     r: str
-#     g: str
-#     b: str
-#
-#     def eval(self, x, y):
-#         kwargs = {"x": x, "y": y}
-#         return (kwargs[self.r], kwargs[self.g], kwargs[self.b])
-
-
 # ======================================================================
 
 
@@ -47,17 +37,6 @@ class VariableY(ZeroArityOperator):
 
     def eval(self, x, y):
         return (y, y, y)
-
-
-# # VariableXXX - VariableYYY
-# for (r, g, b) in product("xy", repeat=3):
-#     name = "Variable" + (r+g+b).upper()
-#     _class = type(
-#         name,
-#         (PositionOperator,),
-#         {"r": r, "g": g, "b": b}
-#     )
-#     locals()[name] = _class
 
 
 __all__ = operator_subclass_names(locals())
