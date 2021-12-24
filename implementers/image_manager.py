@@ -7,7 +7,7 @@ __all__ = ["ImageManager"]
 
 
 ROOT_PATH = Path(__file__).absolute().parent.parent.absolute()
-DATA_DIR = Path('data')
+DATA_DIR = Path("data")
 
 ONLY_SYMBOLS = re.compile(r"[^a-zA-Zа-яА-ЯёЁ0-9\s]")
 
@@ -38,7 +38,7 @@ class ImageManager:
         for text_path in probable_paths:
             if not text_path.is_file():
                 continue
-            with open(text_path, encoding='UTF-8') as file:
+            with open(text_path, encoding="UTF-8") as file:
                 text = file.read()
             if not text:
                 continue
@@ -77,10 +77,10 @@ class ImageManager:
             pass
 
     def create_folder(self, phrase: str) -> Path:  # absolute path
-        dirname = ONLY_SYMBOLS.sub('', phrase)[:30]
+        dirname = ONLY_SYMBOLS.sub("", phrase)[:30]
         folder_path = Path()  # init for IDE
 
-        is_created, add_num, num = False, '', 0
+        is_created, add_num, num = False, "", 0
         while not is_created:
             folder_path = self.data_dir / (dirname + add_num)
             try:
@@ -88,6 +88,6 @@ class ImageManager:
                 is_created = True
             except FileExistsError:
                 num += 1
-                add_num = '_{}'.format(num)
+                add_num = "_{}".format(num)
 
         return folder_path

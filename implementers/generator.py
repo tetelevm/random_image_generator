@@ -55,7 +55,7 @@ class Generator:
         return (to_col(r), to_col(g), to_col(b))
 
     def draw(self, art: Operator) -> Image:
-        img = Image.new('RGB', (self.size, self.size))
+        img = Image.new("RGB", (self.size, self.size))
         for x in range(self.size):
             for y in range(self.size):
                 rgb = art.eval(
