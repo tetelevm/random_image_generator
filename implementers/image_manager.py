@@ -25,7 +25,7 @@ class ImageManager:
         parser.add_argument("-path", type=str)
         parser.add_argument("-target", type=str)
         parser.add_argument("-size", type=int, default=512)
-        parser.add_argument("-deep", type=int)
+        parser.add_argument("-deep", type=str)
         parser.add_argument("-phrase", type=str)
 
         return parser.parse_args()
