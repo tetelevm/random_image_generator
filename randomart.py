@@ -1,4 +1,4 @@
-# version 1.0.0
+# version 1.0.1
 
 from implementers import *
 
@@ -24,11 +24,11 @@ def main():
 
         dir_name = image_manager.create_folder(phrase)
         for deep in deeps:
-            image_name = image_manager.data_dir / dir_name / f"{deep}.png"
-            image = generator.generate_image(phrase, deep)
+            image_name = dir_name / f"{deep}.png"
+            image = generator(phrase, deep)
             image.save(image_name)
 
-        print(f"phrase <{phrase}> has been generated")
+        print(f"phrase <{phrase}> has been generated into <{dir_name.name}>")
 
 
 if __name__ == "__main__":

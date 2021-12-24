@@ -76,7 +76,7 @@ class ImageManager:
         except FileExistsError:
             pass
 
-    def create_folder(self, phrase: str) -> Path:
+    def create_folder(self, phrase: str) -> Path:  # absolute path
         dirname = ONLY_SYMBOLS.sub('', phrase)[:30]
         folder_path = Path()  # init for IDE
 
