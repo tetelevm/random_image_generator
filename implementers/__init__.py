@@ -1,3 +1,7 @@
+"""
+Classes with system logic implementation.
+"""
+
 from .image_manager import *
 from .generator import *
 

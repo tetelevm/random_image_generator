@@ -1,3 +1,8 @@
+"""
+A manager for all operators, a class to inherit the rest of the operators,
+and a couple of tools for easy code writing.
+"""
+
 from __future__ import annotations
 from random import Random
 from abc import ABC, ABCMeta, abstractmethod

@@ -1,4 +1,9 @@
-# version 1.0.2
+# version 1.0.9
+
+"""
+The entry point to the generator.
+Responsible for the interaction of the other parts of the system.
+"""
 
 from implementers import *
 

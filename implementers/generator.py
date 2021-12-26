@@ -1,3 +1,10 @@
+"""
+Image generator.
+
+Contains all the generation logic: creates art of operators and itself
+generates a picture.
+"""
+
 from random import Random
 from PIL import Image
 

@@ -1,3 +1,11 @@
+"""
+A collection of all available operators for generation.
+
+Also in the `base` file is their metaclass manager, a class for
+inheriting operators and additional tools for writing code (which do not
+affect the generation).
+"""
+
 from .base import *
 from .arity_0_operators import *
 from .arity_1_operators import *

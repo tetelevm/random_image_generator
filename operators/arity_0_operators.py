@@ -1,5 +1,11 @@
+"""
+Operators with arity equal to 0.
+
+The most basic operators that do not change the value, but only choose
+which value the value will be used for the color - x/y/c.
+"""
+
 from abc import ABC
-# from itertools import product
 
 from .base import Operator, operator_subclass_names
 

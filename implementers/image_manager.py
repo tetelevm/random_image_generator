@@ -1,3 +1,9 @@
+"""
+The main manager of the system job.
+
+Reads arguments, gets the necessary phrases, creates folders and the like.
+"""
+
 import re
 from pathlib import Path
 from argparse import ArgumentParser
