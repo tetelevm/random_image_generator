@@ -13,34 +13,63 @@ import math
 from abc import ABC, abstractmethod
 
 from .base import Operator, operator_subclass_names, COLOR_TYPE
+from .arity_0_operators import ZERO_OPERATOR
 
 
 class OneArityOperator(Operator, ABC):
+    """
+    This is a one-level operator.
+
+    Changes the original value using the mathematical formula described
+    in the `func` function.
+
+    Has a `first_sub` that selects the value to use.
+    """
+
     arity = 1
 
     @abstractmethod
     def func(self, col: COLOR_TYPE) -> COLOR_TYPE:
+        """
+        Color generation function. Accepts data for generation and
+        outputs the first color step according to the described formula.
+        """
         pass
 
-    def __init__(self, zero_operator):
-        self.zero_operator: Operator = zero_operator
+    def __init__(self, first_sub):
+        self.first_sub: ZERO_OPERATOR = first_sub
 
     def eval(self, x, y):
-        color = self.zero_operator.eval(x, y)
+        """
+        Generates color with its own suboperators and then passes the
+        color calculation to its `func` function.
+        """
+
+        color = self.first_sub.eval(x, y)
         return self.func(color)
 
 
 class TrigonometricOperator(OneArityOperator, ABC):
+    """
+    Color generation function based on trigonometric operators.
+    Has data about the phase and frequency of the operation.
+    """
+
     def __init__(self, zero_operator):
         super().__init__(zero_operator)
-        self.phase = self.random.uniform(0, math.pi)
-        self.freq = self.random.uniform(1.0, 6)
+        self.phase: float = self.random.uniform(0, math.pi)
+        self.frequency: float = self.random.uniform(1.0, 6)
 
 
 # ======================================================================
 
 
 class Well(OneArityOperator):
+    """
+    A function which looks a bit like a well.
+    (description from the original script)
+    """
+
     sort_key = 8
 
     def func(self, col):
@@ -51,6 +80,11 @@ class Well(OneArityOperator):
 
 
 class Tent(OneArityOperator):
+    """
+    A function that looks a bit like a tent.
+    (description from the original script)
+    """
+
     sort_key = 7
 
     def func(self, col):
@@ -61,13 +95,19 @@ class Tent(OneArityOperator):
 
 
 class Sin(TrigonometricOperator):
+    """
+    Sinus-based color generation function.
+    """
+
     sort_key = 6
 
     def func(self, col):
-        r = math.sin(self.phase + self.freq * col[0])
-        g = math.sin(self.phase + self.freq * col[1])
-        b = math.sin(self.phase + self.freq * col[2])
+        r = math.sin(self.phase + self.frequency * col[0])
+        g = math.sin(self.phase + self.frequency * col[1])
+        b = math.sin(self.phase + self.frequency * col[2])
         return (r, g, b)
 
+
+ZERO_ONE_OPERATOR = ZERO_OPERATOR | OneArityOperator
 
 __all__ = operator_subclass_names(locals())

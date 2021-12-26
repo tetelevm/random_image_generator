@@ -28,6 +28,14 @@ class Generator:
         random_local = Random(phrase)
         return random_local.randint(*cls.complexity_interval)
 
+    @classmethod
+    @property
+    def all_complexities(cls) -> list[int]:
+        return [
+            *range(1, cls.complexity_interval[0]),
+            *range(*cls.complexity_interval, 2),
+        ]
+
     def __call__(self, phrase: str, complexity: int) -> Image:
         self.random = Random(phrase)
         OperatorManager.set_random(self.random)

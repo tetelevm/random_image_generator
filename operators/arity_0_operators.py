@@ -11,6 +11,12 @@ from .base import Operator, operator_subclass_names
 
 
 class ZeroArityOperator(Operator, ABC):
+    """
+    This is a zero-level operator.
+    It does not calculate anything, but only selects which value will be
+    used - x/y/c.
+    """
+
     arity = 0
 
 
@@ -18,6 +24,11 @@ class ZeroArityOperator(Operator, ABC):
 
 
 class Constant(ZeroArityOperator):
+    """
+    An operator that does not use position data, but gives only randomly
+    generated data.
+    """
+
     sort_key = 2
 
     def __init__(self):
@@ -32,6 +43,10 @@ class Constant(ZeroArityOperator):
 
 
 class VariableX(ZeroArityOperator):
+    """
+    An operator that selects only the x-position of a pixel.
+    """
+
     sort_key = 0
 
     def eval(self, x, y):
@@ -39,10 +54,16 @@ class VariableX(ZeroArityOperator):
 
 
 class VariableY(ZeroArityOperator):
+    """
+    An operator that selects only the y-position of a pixel.
+    """
+
     sort_key = 1
 
     def eval(self, x, y):
         return (y, y, y)
 
+
+ZERO_OPERATOR = ZeroArityOperator
 
 __all__ = operator_subclass_names(locals())

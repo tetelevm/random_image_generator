@@ -13,9 +13,19 @@ a bug right now).
 from abc import ABC, abstractmethod
 
 from .base import Operator, operator_subclass_names, COLOR_TYPE
+from .arity_2_operators import ZERO_ONE_TWO_OPERATOR
 
 
-class ThirdArityOperator(Operator, ABC):
+class ThreeArityOperator(Operator, ABC):
+    """
+    This is a three-level operator.
+
+    Modifies and mixes the values from the suboperators using the
+    mathematical formula described in the `func` function.
+
+    Has three suboperators that calculate the original color values.
+    """
+
     arity = 3
 
     @abstractmethod
@@ -28,11 +38,16 @@ class ThirdArityOperator(Operator, ABC):
         pass
 
     def __init__(self, first_sub, second_sub, third_sub):
-        self.first_sub = first_sub
-        self.second_sub = second_sub
-        self.third_sub = third_sub
+        self.first_sub: ZERO_ONE_TWO_OPERATOR = first_sub
+        self.second_sub: ZERO_ONE_TWO_OPERATOR = second_sub
+        self.third_sub: ZERO_ONE_TWO_OPERATOR = third_sub
 
     def eval(self, x, y):
+        """
+        Generates color with its own suboperators and then passes the
+        color calculation to its `func` function.
+        """
+
         first_color = self.first_sub.eval(x, y)
         second_color = self.second_sub.eval(x, y)
         third_color = self.third_sub.eval(x, y)
@@ -42,7 +57,11 @@ class ThirdArityOperator(Operator, ABC):
 # ======================================================================
 
 
-class Level(ThirdArityOperator):
+class Level(ThreeArityOperator):
+    """
+    Selects one of two colors depending on the value of the third color.
+    """
+
     sort_key = 9
 
     def __init__(self, *args, **kwargs):
@@ -56,7 +75,12 @@ class Level(ThirdArityOperator):
         return (r, g, b)
 
 
-class Mix(ThirdArityOperator):
+class Mix(ThreeArityOperator):
+    """
+    Calculates the average between the two colors (must initially mix
+    these colors with a third color).
+    """
+
     sort_key = 10
 
     def func(self, first_col, second_col, third_col):
@@ -70,5 +94,7 @@ class Mix(ThirdArityOperator):
         b = (second_col[2] + third_col[2]) / 2
         return (r, g, b)
 
+
+ZERO_ONE_TWO_THREE_OPERATOR = ZERO_ONE_TWO_OPERATOR | ThreeArityOperator
 
 __all__ = operator_subclass_names(locals())
