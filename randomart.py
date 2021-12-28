@@ -19,11 +19,12 @@ def main():
     image_manager = ImageManager()
     generator = Generator(image_manager.args.size)
 
-    input_complexities: list[int] = (
-        [int(image_manager.args.complexity)]
-        if image_manager.args.complexity != "all" else
-        Generator.all_complexities
-    )
+    if image_manager.args.complexity == "all":
+        input_complexities = Generator.all_complexities
+    elif image_manager.args.complexity is not None:
+        input_complexities = [int(image_manager.args.complexity)]
+    else:
+        input_complexities = None
 
     for phrase in image_manager.phrases:
         complexities = input_complexities or [Generator.get_complexity(phrase)]
