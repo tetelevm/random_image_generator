@@ -1,6 +1,6 @@
 """
-A manager for all operators, a class to inherit the rest of the operators,
-and a couple of tools for easy code writing.
+A manager for all operators, a class to inherit the rest of the
+operators, and a couple of tools for easy code writing.
 """
 
 from __future__ import annotations
@@ -95,7 +95,6 @@ class Operator(ABC, metaclass=OperatorManager):
     """
 
     arity: int
-    random: Random
 
     # To sort as in the original, the first change will delete
     sort_key: int
