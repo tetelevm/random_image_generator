@@ -1,4 +1,4 @@
-# version 1.1.0
+# version 1.1.1
 
 """
 The entry point to the generator.
@@ -12,8 +12,6 @@ def main():
     """
     The main function of the system, which creates all images by given
     phrases with input (or calculated) complexities.
-
-    :return: None
     """
 
     image_manager = ImageManager()
