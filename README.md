@@ -3,8 +3,9 @@
 **Random Image Generator** is a simple program that generates an image by a
 given phrase. Example:
 
-"It's a random phrase"
+![img.png](img.png "Phrase for the image (complexity 138)")
 
+_"Phrase for the image (complexity 137)"_
 
 ## Description
 
