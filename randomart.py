@@ -1,11 +1,11 @@
-# version 1.1.1
+# version 1.1.2
 
 """
 The entry point to the generator.
 Responsible for the interaction of the other parts of the system.
 """
 
-from implementers import *
+from implementers import ImageManager, Generator
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
         dir_name = image_manager.create_folder(phrase)
         for complexity in complexities:
             image_name = dir_name / f"{complexity}.png"
-            image = generator(phrase, complexity)
+            image = generator.create_image(phrase, complexity)
             image.save(image_name)
 
         print(f"phrase <{phrase}> has been generated into <{dir_name.name}>")

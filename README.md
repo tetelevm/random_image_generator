@@ -5,7 +5,7 @@ given phrase. Example:
 
 ![img.png](img.png "Phrase for the image (complexity 138)")
 
-_"Phrase for the image (complexity 137)"_
+_"Phrase for the image (complexity 138)"_
 
 ## Description
 

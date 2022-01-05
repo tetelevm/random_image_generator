@@ -62,7 +62,7 @@ class Generator:
             *range(*cls.complexity_interval, 2),
         ]
 
-    def __call__(self, phrase: str, complexity: int) -> Image:
+    def create_image(self, phrase: str, complexity: int) -> Image:
         """
         Sets the state of random, generates art and with it the image.
         """
@@ -123,6 +123,9 @@ class Generator:
         """
 
         img = Image.new("RGB", (self.size, self.size))
+
+        # Although a pixel is a rectangle rather than a dot, it is colored like
+        # the dot in the upper left corner.
         for x in range(self.size):
             for y in range(self.size):
                 rgb = art.eval(
