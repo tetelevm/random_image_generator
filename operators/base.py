@@ -131,12 +131,16 @@ def operator_subclass_names(locals_: dict[str, object]) -> list[str]:
     :return: list of names
     """
 
-    def is_operator_subclass(cls) -> bool:
+    def is_real_operator_subclass(name: str, cls: type) -> bool:
         """ Look only for non-abstract Operator subclasses. """
-        return isinstance(cls, OperatorManager) and ABC not in cls.__bases__
+        return (
+            isinstance(cls, OperatorManager)
+            and ABC not in cls.__bases__
+            and name == cls.__name__
+        )
 
     return [
         name
         for (name, cls) in locals_.items()
-        if not name.startswith("_") and is_operator_subclass(cls)
+        if is_real_operator_subclass(name, cls)
     ]
