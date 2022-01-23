@@ -65,14 +65,11 @@ class Mix(ThreeArityOperator):
     """
 
     def func(self, first_col, second_col, third_col):
-        # The original script contains a line:
-        # w = 0.5 * (self.first_sub.eval(x, y)[0] + 1.0)
-        # But then it does not use the parameter w (most likely a plain bug),
-        # so here we do not use the parameter first_col either.
+        w = 0.5 * (first_col[0] + 1.0)
 
-        r = (second_col[0] + third_col[0]) / 2
-        g = (second_col[1] + third_col[1]) / 2
-        b = (second_col[2] + third_col[2]) / 2
+        r = w * second_col[0] + (1 - w) * third_col[0]
+        g = w * second_col[1] + (1 - w) * third_col[1]
+        b = w * second_col[2] + (1 - w) * third_col[2]
         return (r, g, b)
 
 
