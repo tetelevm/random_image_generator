@@ -27,6 +27,7 @@ class OneArityOperator(Operator, ABC):
     """
 
     arity = 1
+    suboperators: tuple[ZERO_OPERATOR]
 
     @abstractmethod
     def func(self, col: COLOR_TYPE) -> COLOR_TYPE:
@@ -36,18 +37,6 @@ class OneArityOperator(Operator, ABC):
         """
         pass
 
-    def __init__(self, first_sub):
-        self.first_sub: ZERO_OPERATOR = first_sub
-
-    def eval(self, x, y):
-        """
-        Generates color with its own suboperators and then passes the
-        color calculation to its `func` function.
-        """
-
-        color = self.first_sub.eval(x, y)
-        return self.func(color)
-
 
 class TrigonometricOperator(OneArityOperator, ABC):
     """
@@ -55,8 +44,8 @@ class TrigonometricOperator(OneArityOperator, ABC):
     Has data about the phase and frequency of the operation.
     """
 
-    def __init__(self, zero_operator):
-        super().__init__(zero_operator)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.phase: float = self.random.uniform(0, math.pi)
         self.frequency: float = self.random.uniform(1.0, 6)
 

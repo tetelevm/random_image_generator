@@ -24,6 +24,7 @@ class TwoArityOperator(Operator, ABC):
     """
 
     arity = 2
+    suboperators: tuple[ZERO_ONE_OPERATOR]
 
     @abstractmethod
     def func(self, first_col: COLOR_TYPE, second_col: COLOR_TYPE) -> COLOR_TYPE:
@@ -32,20 +33,6 @@ class TwoArityOperator(Operator, ABC):
         outputs the first color step according to the described formula.
         """
         pass
-
-    def __init__(self, first_sub, second_sub):
-        self.first_sub: ZERO_ONE_OPERATOR = first_sub
-        self.second_sub: ZERO_ONE_OPERATOR = second_sub
-
-    def eval(self, x, y):
-        """
-        Generates color with its own suboperators and then passes the
-        color calculation to its `func` function.
-        """
-
-        first_color = self.first_sub.eval(x, y)
-        second_color = self.second_sub.eval(x, y)
-        return self.func(first_color, second_color)
 
 
 # ======================================================================

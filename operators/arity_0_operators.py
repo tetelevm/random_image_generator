@@ -19,6 +19,14 @@ class ZeroArityOperator(Operator, ABC):
 
     arity = 0
 
+    def func(self, *colors):
+        """
+        This function is not needed by this class.
+        The class does not generate a color, it only selects a value to
+        generate, and this function is a stub for the abstractmethod.
+        """
+        pass
+
 
 # ======================================================================
 
@@ -30,6 +38,7 @@ class Constant(ZeroArityOperator):
     """
 
     def __init__(self):
+        super().__init__()
         self.value = (
             self.random.uniform(0, 1),
             self.random.uniform(0, 1),

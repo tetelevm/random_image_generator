@@ -27,6 +27,7 @@ class ThreeArityOperator(Operator, ABC):
     """
 
     arity = 3
+    suboperators: tuple[ZERO_ONE_TWO_OPERATOR]
 
     @abstractmethod
     def func(
@@ -37,22 +38,6 @@ class ThreeArityOperator(Operator, ABC):
     ) -> COLOR_TYPE:
         pass
 
-    def __init__(self, first_sub, second_sub, third_sub):
-        self.first_sub: ZERO_ONE_TWO_OPERATOR = first_sub
-        self.second_sub: ZERO_ONE_TWO_OPERATOR = second_sub
-        self.third_sub: ZERO_ONE_TWO_OPERATOR = third_sub
-
-    def eval(self, x, y):
-        """
-        Generates color with its own suboperators and then passes the
-        color calculation to its `func` function.
-        """
-
-        first_color = self.first_sub.eval(x, y)
-        second_color = self.second_sub.eval(x, y)
-        third_color = self.third_sub.eval(x, y)
-        return self.func(first_color, second_color, third_color)
-
 
 # ======================================================================
 
@@ -62,8 +47,8 @@ class Level(ThreeArityOperator):
     Selects one of two colors depending on the value of the third color.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args):
+        super().__init__(*args)
         self.treshold = self.random.uniform(-1.0, 1.0)
 
     def func(self, first_col, second_col, third_col):

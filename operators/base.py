@@ -95,18 +95,10 @@ class Operator(ABC, metaclass=OperatorManager):
     """
 
     arity: int
+    suboperators: tuple[Operator]
 
-    @abstractmethod
-    def eval(self, x: PIXEL_RANGE, y: PIXEL_RANGE) -> COLOR_TYPE:
-        """
-        Color generation based on the pixel's position relative to the
-        center of the image.
-
-        :param x: position on x
-        :param y: position on y
-        :return: rgb-color
-        """
-        pass
+    def __init__(self, *args: Operator):
+        self.suboperators = args
 
     @classmethod
     @property
@@ -116,6 +108,27 @@ class Operator(ABC, metaclass=OperatorManager):
         """
 
         return cls.__class__.get_random()
+
+    @abstractmethod
+    def func(self, *colors: COLOR_TYPE) -> COLOR_TYPE:
+        """
+        Generates color with its own suboperators and then passes the
+        color calculation to its `func` function.
+        """
+        pass
+
+    def eval(self, x: PIXEL_RANGE, y: PIXEL_RANGE) -> COLOR_TYPE:
+        """
+        Color generation based on the pixel's position relative to the
+        center of the image.
+
+        :param x: position on x
+        :param y: position on y
+        :return: rgb-color
+        """
+
+        colors = [sub_op.eval(x, y) for sub_op in self.suboperators]
+        return self.func(*colors)
 
 
 def operator_subclass_names(locals_: dict[str, object]) -> list[str]:
