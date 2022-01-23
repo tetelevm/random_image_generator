@@ -29,8 +29,6 @@ class Constant(ZeroArityOperator):
     generated data.
     """
 
-    sort_key = 2
-
     def __init__(self):
         self.value = (
             self.random.uniform(0, 1),
@@ -47,8 +45,6 @@ class VariableX(ZeroArityOperator):
     An operator that selects only the x-position of a pixel.
     """
 
-    sort_key = 0
-
     def eval(self, x, y):
         return (x, x, x)
 
@@ -57,8 +53,6 @@ class VariableY(ZeroArityOperator):
     """
     An operator that selects only the y-position of a pixel.
     """
-
-    sort_key = 1
 
     def eval(self, x, y):
         return (y, y, y)

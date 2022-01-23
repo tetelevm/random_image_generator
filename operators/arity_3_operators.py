@@ -6,8 +6,8 @@ operators, which calculate the original colors. The second and third
 colors are mixed, and the third comes as a filter for them.
 
 In this version the values (r, g, b) do not intersect each other and are
-calculated separately, but this will change in the future (and is more of
-a bug right now).
+calculated separately, but this will change in the future (and is more
+of a bug right now).
 """
 
 from abc import ABC, abstractmethod
@@ -62,8 +62,6 @@ class Level(ThreeArityOperator):
     Selects one of two colors depending on the value of the third color.
     """
 
-    sort_key = 9
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.treshold = self.random.uniform(-1.0, 1.0)
@@ -80,8 +78,6 @@ class Mix(ThreeArityOperator):
     Calculates the average between the two colors (must initially mix
     these colors with a third color).
     """
-
-    sort_key = 10
 
     def func(self, first_col, second_col, third_col):
         # The original script contains a line:

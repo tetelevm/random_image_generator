@@ -74,7 +74,7 @@ class OperatorManager(ABCMeta):
         Sorted list of operators with `arity = 0`.
         """
 
-        return sorted(mcs.operators_flat, key=lambda x: x.sort_key)
+        return sorted(mcs.operators_flat, key=lambda x: x.__name__)
 
     @classmethod
     def get_operators_dimensional(mcs) -> list[OperatorManager]:
@@ -82,7 +82,7 @@ class OperatorManager(ABCMeta):
         Sorted list of operators with `arity > 0`.
         """
 
-        return sorted(mcs.operators_dimensional, key=lambda x: x.sort_key)
+        return sorted(mcs.operators_dimensional, key=lambda x: x.__name__)
 
 
 class Operator(ABC, metaclass=OperatorManager):
@@ -95,9 +95,6 @@ class Operator(ABC, metaclass=OperatorManager):
     """
 
     arity: int
-
-    # To sort as in the original, the first change will delete
-    sort_key: int
 
     @abstractmethod
     def eval(self, x: PIXEL_RANGE, y: PIXEL_RANGE) -> COLOR_TYPE:

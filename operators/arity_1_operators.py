@@ -70,8 +70,6 @@ class Well(OneArityOperator):
     (description from the original script)
     """
 
-    sort_key = 8
-
     def func(self, col):
         r = 1 - 2 / (1 + col[0] ** 2) ** 8
         g = 1 - 2 / (1 + col[1] ** 2) ** 8
@@ -85,8 +83,6 @@ class Tent(OneArityOperator):
     (description from the original script)
     """
 
-    sort_key = 7
-
     def func(self, col):
         r = 1 - 2 * abs(col[0])
         g = 1 - 2 * abs(col[1])
@@ -98,8 +94,6 @@ class Sin(TrigonometricOperator):
     """
     Sinus-based color generation function.
     """
-
-    sort_key = 6
 
     def func(self, col):
         r = math.sin(self.phase + self.frequency * col[0])

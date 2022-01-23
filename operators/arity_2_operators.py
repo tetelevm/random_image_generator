@@ -56,8 +56,6 @@ class Sum(TwoArityOperator):
     Calculates the average between the two colors.
     """
 
-    sort_key = 3
-
     def func(self, first_col, second_col):
         r = (first_col[0] + second_col[0]) / 2
         g = (first_col[1] + second_col[1]) / 2
@@ -70,8 +68,6 @@ class Product(TwoArityOperator):
     Multiplies one color by another.
     """
 
-    sort_key = 4
-
     def func(self, first_col, second_col):
         r = first_col[0] * second_col[0]
         g = first_col[1] * second_col[1]
@@ -83,8 +79,6 @@ class Mod(TwoArityOperator):
     """
     Calculates the mod of one color relative to another.
     """
-
-    sort_key = 5
 
     def func(self, first_col, second_col):
         try:
