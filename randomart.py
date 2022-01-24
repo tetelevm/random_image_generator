@@ -1,4 +1,4 @@
-# version 1.1.2
+# version 1.2
 
 """
 The entry point to the generator.
