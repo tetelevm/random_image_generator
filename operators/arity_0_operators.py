@@ -45,6 +45,9 @@ class Constant(ZeroArityOperator):
             self.random.uniform(0, 1),
         )
 
+    def __str_extra_args__(self):
+        return [f"value={self.value}"]
+
     def eval(self, x, y):
         return self.value
 

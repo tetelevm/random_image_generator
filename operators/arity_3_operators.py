@@ -51,6 +51,9 @@ class Level(ThreeArityOperator):
         super().__init__(*args)
         self.treshold = self.random.uniform(-1.0, 1.0)
 
+    def __str_extra_args__(self):
+        return [f"treshold={self.treshold}"]
+
     def func(self, first_col, second_col, third_col):
         r = second_col[0] if first_col[0] < self.treshold else third_col[0]
         g = second_col[1] if first_col[1] < self.treshold else third_col[1]

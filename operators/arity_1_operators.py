@@ -49,6 +49,9 @@ class TrigonometricOperator(OneArityOperator, ABC):
         self.phase: float = self.random.uniform(0, math.pi)
         self.frequency: float = self.random.uniform(1.0, 6)
 
+    def __str_extra_args__(self):
+        return [f"phase={self.phase}", f"frequency={self.frequency}"]
+
 
 # ======================================================================
 

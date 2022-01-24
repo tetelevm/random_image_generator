@@ -100,6 +100,40 @@ class Operator(ABC, metaclass=OperatorManager):
     def __init__(self, *args: Operator):
         self.suboperators = args
 
+    def __str_extra_args__(self) -> list[str]:
+        """
+        Converts to string form the additional arguments that are needed
+        to duplicate the operator.
+        """
+
+        return []
+
+    def __str__(self):
+        args = (
+            [str(sub_op) for sub_op in self.suboperators]
+            + self.__str_extra_args__()
+        )
+        args_str = ", ".join(args)
+        return f"{self.__class__.__name__}({args_str})"
+
+    def as_str(self, sym="\t", _nesting: int = 0) -> str:
+        indent = sym * _nesting
+
+        args = [
+            sub_op.as_str(sym=sym, _nesting=_nesting + 1)
+            for sub_op in self.suboperators
+        ]
+        extra = [
+            indent + sym + kwarg
+            for kwarg in self.__str_extra_args__()
+        ]
+
+        args_str = ",\n".join(args + extra)
+        if args_str:
+            args_str = f"\n{args_str}\n{indent}"
+
+        return f"{indent}{self.__class__.__name__}({args_str})"
+
     @classmethod
     @property
     def random(cls) -> Random:
