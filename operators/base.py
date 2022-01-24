@@ -99,6 +99,14 @@ class Operator(ABC, metaclass=OperatorManager):
 
     def __init__(self, *args: Operator):
         self.suboperators = args
+        self.__self_init__()
+
+    def __self_init__(self):
+        """
+        Creates additional arguments that the operator needs.
+        """
+
+        pass
 
     def __str_extra_args__(self) -> list[str]:
         """

@@ -44,8 +44,7 @@ class TrigonometricOperator(OneArityOperator, ABC):
     Has data about the phase and frequency of the operation.
     """
 
-    def __init__(self, *args):
-        super().__init__(*args)
+    def __self_init__(self):
         self.phase: float = self.random.uniform(0, math.pi)
         self.frequency: float = self.random.uniform(1.0, 6)
 

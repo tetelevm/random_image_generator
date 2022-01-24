@@ -37,8 +37,7 @@ class Constant(ZeroArityOperator):
     generated data.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __self_init__(self):
         self.value = (
             self.random.uniform(0, 1),
             self.random.uniform(0, 1),

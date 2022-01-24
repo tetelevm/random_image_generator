@@ -47,8 +47,7 @@ class Level(ThreeArityOperator):
     Selects one of two colors depending on the value of the third color.
     """
 
-    def __init__(self, *args):
-        super().__init__(*args)
+    def __self_init__(self):
         self.treshold = self.random.uniform(-1.0, 1.0)
 
     def __str_extra_args__(self):
