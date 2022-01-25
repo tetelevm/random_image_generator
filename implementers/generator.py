@@ -70,7 +70,7 @@ class Generator:
         self.random = Random(phrase)
         OperatorManager.set_random(self.random)
         art = self.generate_art(complexity)
-        return self.draw(art)
+        return self.draw(art, self.size)
 
     def generate_art(self, complexity: int) -> Operator:
         """
@@ -116,22 +116,23 @@ class Generator:
         to_col = lambda x: max(1, min(255, int(128 * (x + 1))))
         return (to_col(r), to_col(g), to_col(b))
 
-    def draw(self, art: Operator) -> Image:
+    @classmethod
+    def draw(cls, art: Operator, size: int) -> Image:
         """
         Executes the art for each pixel and sets the resulting value in
         the image.
         """
 
-        img = Image.new("RGB", (self.size, self.size))
+        img = Image.new("RGB", (size, size))
 
         # Although a pixel is a rectangle rather than a dot, it is colored like
         # the dot in the upper left corner.
-        for x in range(self.size):
-            for y in range(self.size):
+        for x in range(size):
+            for y in range(size):
                 rgb = art.eval(
-                    2 * x / self.size - 1,
-                    2 * y / self.size - 1,
+                    2 * x / size - 1,
+                    2 * y / size - 1,
                 )
-                img.putpixel((x, y), self.normalize_color(*rgb))
+                img.putpixel((x, y), cls.normalize_color(*rgb))
 
         return img
