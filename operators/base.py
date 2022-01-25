@@ -97,9 +97,14 @@ class Operator(ABC, metaclass=OperatorManager):
     arity: int
     suboperators: tuple[Operator]
 
-    def __init__(self, *args: Operator):
+    def __init__(self, *args: Operator, **kwargs):
         self.suboperators = args
-        self.__self_init__()
+        if not kwargs:
+            self.__self_init__()
+        else:
+            # to get from the string
+            for (name, value) in kwargs.items():
+                setattr(self, name, value)
 
     def __self_init__(self):
         """

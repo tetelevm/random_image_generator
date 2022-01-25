@@ -8,7 +8,7 @@ generates a picture.
 from random import Random
 from PIL import Image
 
-from operators import OperatorManager, Operator
+from operators import *
 
 
 __all__ = ["Generator"]
@@ -106,6 +106,19 @@ class Generator:
         suboperators.append(self.generate_art(complexity - 1 - last_complexity))
 
         return operator(*suboperators)
+
+    @staticmethod
+    def read_art(art_string: str) -> Operator:
+        """
+        Creates art from its string representation.
+
+        It is expected that `art_string` will look like `str(art)`, that
+        is, it will contain operator names, nested operators as `*args`
+        and internal operator variables as `**kwargs`.
+        Made so you can share art or experiment with it.
+        """
+
+        return eval(art_string)
 
     @staticmethod
     def normalize_color(r: float, g: float, b: float) -> tuple[int, int, int]:
