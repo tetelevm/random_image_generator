@@ -129,11 +129,11 @@ class Operator(ABC, metaclass=OperatorManager):
         args_str = ", ".join(args)
         return f"{self.__class__.__name__}({args_str})"
 
-    def as_str(self, sym="\t", _nesting: int = 0) -> str:
+    def to_print(self, sym="\t", _nesting: int = 0) -> str:
         indent = sym * _nesting
 
         args = [
-            sub_op.as_str(sym=sym, _nesting=_nesting + 1)
+            sub_op.to_print(sym=sym, _nesting=_nesting + 1)
             for sub_op in self.suboperators
         ]
         extra = [
