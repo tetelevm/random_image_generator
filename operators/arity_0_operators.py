@@ -6,8 +6,9 @@ which value the value will be used for the color - x/y/c.
 """
 
 from abc import ABC
+from itertools import product
 
-from .base import Operator, operator_subclass_names
+from .base import OperatorManager, Operator, operator_subclass_names
 
 
 class ZeroArityOperator(Operator, ABC):
@@ -18,6 +19,21 @@ class ZeroArityOperator(Operator, ABC):
     """
 
     arity = 0
+    xyc_index: list[int]
+
+    def __self_init__(self):
+        self.value = self.random.uniform(-1, 1)
+
+    def __str_extra_args__(self):
+        return [f"value={self.value}"]
+
+    def eval(self, x, y):
+        xyc_cols = [x, y, self.value]
+        return (
+            xyc_cols[self.xyc_index[0]],
+            xyc_cols[self.xyc_index[1]],
+            xyc_cols[self.xyc_index[2]],
+        )
 
     def func(self, *colors):
         """
@@ -31,42 +47,16 @@ class ZeroArityOperator(Operator, ABC):
 # ======================================================================
 
 
-class Constant(ZeroArityOperator):
-    """
-    An operator that does not use position data, but gives only randomly
-    generated data.
-    """
-
-    def __self_init__(self):
-        self.value = (
-            self.random.uniform(0, 1),
-            self.random.uniform(0, 1),
-            self.random.uniform(0, 1),
-        )
-
-    def __str_extra_args__(self):
-        return [f"value={self.value}"]
-
-    def eval(self, x, y):
-        return self.value
-
-
-class VariableX(ZeroArityOperator):
-    """
-    An operator that selects only the x-position of a pixel.
-    """
-
-    def eval(self, x, y):
-        return (x, x, x)
-
-
-class VariableY(ZeroArityOperator):
-    """
-    An operator that selects only the y-position of a pixel.
-    """
-
-    def eval(self, x, y):
-        return (y, y, y)
+# VariableXXX, VariableXXY, VariableXXC, ..., VariableXYX, ..., VariableCCC
+for (r, g, b) in product("xyc", repeat=3):
+    class_name = "Variable" + r.upper() + g.upper() + b.upper()
+    indexes = ["xyc".find(r), "xyc".find(g), "xyc".find(b)]
+    doc = f"An operator that selects only the {r}{g}{b}-position of a pixel."
+    locals()[class_name] = OperatorManager(
+        class_name,
+        (ZeroArityOperator,),
+        {"xyc_index": indexes, "__doc__": doc}
+    )
 
 
 ZERO_OPERATOR = ZeroArityOperator
