@@ -86,7 +86,13 @@ class Circle(OneArityOperator):
 
 
 class Arror(OneArityOperator):
-    formula = lambda s, col: 5.8 * col**2 - 6.8 * abs(col) + 1
+    def formula(self, col):
+        return 5.8 * col**2 - 6.8 * abs(col) + 1
+
+
+class Sigmoid(OneArityOperator):
+    def formula(self, col):
+        return 2 / (1 + math.e ** (-col * 10)) - 1
 
 
 class Splitter(OneArityOperator):
