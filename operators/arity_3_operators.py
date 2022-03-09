@@ -98,6 +98,14 @@ class Mix(ThreeArityOperator):
         return w * col_2 + (1 - w) * col_3
 
 
+class LineAvg(ThreeArityOperator):
+    def formula(self, col_1, col_2, col_3):
+        mi, av, ma = sorted([col_1, col_2, col_3])
+        if ma - mi == 0:
+            return 0.0
+        return (ma + mi - 2 * av) / (ma - mi)
+
+
 ZERO_ONE_TWO_THREE_OPERATOR = ZERO_ONE_TWO_OPERATOR | ThreeArityOperator
 
 __all__ = operator_subclass_names(locals())

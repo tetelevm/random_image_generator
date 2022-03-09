@@ -77,6 +77,15 @@ class Mod(TwoArityOperator):
         return col_1 % col_2
 
 
+class Exponentiation(TwoArityOperator):
+    def formula(self, col_1, col_2):
+        col_1 = abs(col_1)
+        if col_2 < 0:
+            return - col_1 ** abs(col_2)
+        else:
+            return col_1 ** col_2
+
+
 ZERO_ONE_TWO_OPERATOR = ZERO_ONE_OPERATOR | TwoArityOperator
 
 __all__ = operator_subclass_names(locals())
