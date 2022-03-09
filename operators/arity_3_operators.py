@@ -29,14 +29,43 @@ class ThreeArityOperator(Operator, ABC):
     arity = 3
     suboperators: tuple[ZERO_ONE_TWO_OPERATOR]
 
+    def __self_init__(self):
+        self.shift = self.random.randint(0, 2)
+
+    def __str_extra_args__(self) -> list[str]:
+        return [f"shift={self.shift}"]
+
     @abstractmethod
+    def formula(self, col_1: float, col_2: float, col_3: float) -> float:
+        pass
+
     def func(
             self,
             first_col: COLOR_TYPE,
             second_col: COLOR_TYPE,
             third_col: COLOR_TYPE
     ) -> COLOR_TYPE:
-        pass
+        """
+        Color generation function. Accepts data for generation and
+        outputs the first color step according to the described formula.
+        """
+
+        r = self.formula(
+            first_col[0],
+            second_col[(0 + self.shift) % 3],
+            third_col[(0 + self.shift * 2) % 3],
+        )
+        g = self.formula(
+            first_col[1],
+            second_col[(1 + self.shift) % 3],
+            third_col[(1 + self.shift * 2) % 3],
+        )
+        b = self.formula(
+            first_col[2],
+            second_col[(2 + self.shift) % 3],
+            third_col[(2 + self.shift * 2) % 3],
+        )
+        return (r, g, b)
 
 
 # ======================================================================
@@ -48,16 +77,14 @@ class Level(ThreeArityOperator):
     """
 
     def __self_init__(self):
+        super().__self_init__()
         self.treshold = self.random.uniform(-1.0, 1.0)
 
     def __str_extra_args__(self):
-        return [f"treshold={self.treshold}"]
+        return super().__str_extra_args__() + [f"treshold={self.treshold}"]
 
-    def func(self, first_col, second_col, third_col):
-        r = second_col[0] if first_col[0] < self.treshold else third_col[0]
-        g = second_col[1] if first_col[1] < self.treshold else third_col[1]
-        b = second_col[2] if first_col[2] < self.treshold else third_col[2]
-        return (r, g, b)
+    def formula(self, col_1, col_2, col_3):
+        return col_1 if col_2 < self.treshold else col_3
 
 
 class Mix(ThreeArityOperator):
@@ -66,13 +93,9 @@ class Mix(ThreeArityOperator):
     these colors with a third color).
     """
 
-    def func(self, first_col, second_col, third_col):
-        w = 0.5 * (first_col[0] + 1.0)
-
-        r = w * second_col[0] + (1 - w) * third_col[0]
-        g = w * second_col[1] + (1 - w) * third_col[1]
-        b = w * second_col[2] + (1 - w) * third_col[2]
-        return (r, g, b)
+    def formula(self, col_1, col_2, col_3):
+        w = 0.5 * (col_1 + 1.0)
+        return w * col_2 + (1 - w) * col_3
 
 
 ZERO_ONE_TWO_THREE_OPERATOR = ZERO_ONE_TWO_OPERATOR | ThreeArityOperator

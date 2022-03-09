@@ -26,13 +26,26 @@ class TwoArityOperator(Operator, ABC):
     arity = 2
     suboperators: tuple[ZERO_ONE_OPERATOR]
 
+    def __self_init__(self):
+        self.shift = self.random.randint(0, 2)
+
+    def __str_extra_args__(self) -> list[str]:
+        return [f"shift={self.shift}"]
+
     @abstractmethod
+    def formula(self, col_1: float, col_2: float) -> float:
+        pass
+
     def func(self, first_col: COLOR_TYPE, second_col: COLOR_TYPE) -> COLOR_TYPE:
         """
         Color generation function. Accepts data for generation and
         outputs the first color step according to the described formula.
         """
-        pass
+        return (
+            self.formula(first_col[0], second_col[(0 + self.shift) % 3]),
+            self.formula(first_col[1], second_col[(1 + self.shift) % 3]),
+            self.formula(first_col[2], second_col[(2 + self.shift) % 3]),
+        )
 
 
 # ======================================================================
@@ -42,39 +55,26 @@ class Sum(TwoArityOperator):
     """
     Calculates the average between the two colors.
     """
-
-    def func(self, first_col, second_col):
-        r = (first_col[0] + second_col[0]) / 2
-        g = (first_col[1] + second_col[1]) / 2
-        b = (first_col[2] + second_col[2]) / 2
-        return (r, g, b)
+    def formula(self, col_1, col_2):
+        return (col_1 + col_2) / 2
 
 
 class Product(TwoArityOperator):
     """
     Multiplies one color by another.
     """
-
-    def func(self, first_col, second_col):
-        r = first_col[0] * second_col[0]
-        g = first_col[1] * second_col[1]
-        b = first_col[2] * second_col[2]
-        return (r, g, b)
+    def formula(self, col_1, col_2):
+        return col_1 * col_2
 
 
 class Mod(TwoArityOperator):
     """
     Calculates the mod of one color relative to another.
     """
-
-    def func(self, first_col, second_col):
-        try:
-            r = first_col[0] % second_col[0]
-            g = first_col[1] % second_col[1]
-            b = first_col[2] % second_col[2]
-            return (r, g, b)
-        except ZeroDivisionError:
-            return (0, 0, 0)
+    def formula(self, col_1, col_2):
+        if col_2 == 0:
+            return 0
+        return col_1 % col_2
 
 
 ZERO_ONE_TWO_OPERATOR = ZERO_ONE_OPERATOR | TwoArityOperator
