@@ -5,13 +5,18 @@ Transform the original value by some mathematical formula. Owns the
 0-arity operator, which selects a value for conversion before performing
 the conversion.
 
-In this version the values (r, g, b) do not intersect each other and are
-calculated separately, but this will change in the future.
+You can see the `formula` generation using the code:
+
+from from matplotlib import pyplot
+x = [a / 1000 for a in range(-1000, 1001)]
+y = [formula(a) for a in x]
+pyplot.plot(x, y)
+pyplot.show()
+
 """
 
 import math
-from types import FunctionType, LambdaType
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from .base import Operator, operator_subclass_names, COLOR_TYPE
 from .arity_0_operators import ZERO_OPERATOR
@@ -21,8 +26,8 @@ class OneArityOperator(Operator, ABC):
     """
     This is a one-level operator.
 
-    Changes the original value using the mathematical formula described
-    in the `func` function.
+    Modifies the original value using the formula from the `formula`
+    method.
 
     Has a `first_sub` that selects the value to use.
     """
@@ -30,8 +35,9 @@ class OneArityOperator(Operator, ABC):
     arity = 1
     suboperators: tuple[ZERO_OPERATOR]
 
-    # it's a method
-    formula: FunctionType | LambdaType
+    @abstractmethod
+    def formula(self, col: float) -> float:
+        pass
 
     def func(self, col: COLOR_TYPE) -> COLOR_TYPE:
         """
@@ -63,26 +69,36 @@ class TrigonometricOperator(OneArityOperator, ABC):
 
 class Well(OneArityOperator):
     """
-    A function which looks a bit like a well.
-    (description from the original script)
+    A function which looks a bit like a well (letter V with rounded
+    edges).
     """
-    formula = lambda s, col: 1 - 2 / (1 + col ** 2) ** 8
+    def formula(self, col):
+        return 1 - 2 / (1 + col ** 2) ** 8
 
 
 class Tent(OneArityOperator):
     """
-    A function that looks a bit like a tent.
-    (description from the original script)
+    A function that looks a bit like a tent (two lines (-1;-1)-(0;1) and
+    (0;1)-(1;-1)).
     """
-    formula = lambda s, col: 1 - 2 * abs(col)
+    def formula(self, col):
+        return 1 - 2 * abs(col)
 
 
 class Hyperbole(OneArityOperator):
-    formula = lambda s, col: (1 if col >= 0 else -1) * (1 - abs(col) ** 0.5) ** 2
+    """
+    A hyperbolic function that changes its value at point 0.
+    """
+    def formula(self, col):
+        return (1 if col >= 0 else -1) * (1 - abs(col) ** 0.5) ** 2
 
 
 class Circle(OneArityOperator):
-    formula = lambda s, col: (1 if col >= 0 else -1) * (1 - col ** 2) ** 0.5
+    """
+    The first and third quarter of the circle.
+    """
+    def formula(self, col):
+        return (1 if col >= 0 else -1) * (1 - col ** 2) ** 0.5
 
 
 class Arror(OneArityOperator):
@@ -91,12 +107,18 @@ class Arror(OneArityOperator):
 
 
 class Sigmoid(OneArityOperator):
+    """
+    Standard sigmoid function.
+    """
     def formula(self, col):
         return 2 / (1 + math.e ** (-col * 10)) - 1
 
 
 class Splitter(OneArityOperator):
-    def formula(self, col: float) -> float:
+    """
+    Just a line divided into four parts.
+    """
+    def formula(self, col):
         if col < -0.5:
             return col + 1
         if -0.5 <= col < 0:
@@ -108,7 +130,10 @@ class Splitter(OneArityOperator):
 
 
 class SplitParabola(OneArityOperator):
-    def formula(self, col: float) -> float:
+    """
+    It looks like the letter V drawn with a parabola.
+    """
+    def formula(self, col):
         if col < -0.5:
             return 4 * (col + 0.5)**2
         if -0.5 <= col < 0.5:
@@ -118,7 +143,10 @@ class SplitParabola(OneArityOperator):
 
 
 class Star(OneArityOperator):
-    def formula(self, col: float) -> float:
+    """
+    Four pieces of the four-pointed star.
+    """
+    def formula(self, col):
         third = 1/3
         if col < -third:
             return 0.5 * (col + 1)
@@ -132,16 +160,21 @@ class Star(OneArityOperator):
 
 class Sin(TrigonometricOperator):
     """
-    Sinus-based color generation function.
+    Sinus-based color generation function. It has a phase and frequency
+    shift.
     """
-    formula = lambda s, col: math.sin(s.phase + s.frequency * col)
+    def formula(self, col):
+        return math.sin(self.phase + self.frequency * col)
 
 
 class Cos(TrigonometricOperator):
     """
-    Cosinus-based color generation function.
+    Cosine-based color generation function. It has a phase and frequency
+    shift. Although the phase shift makes this operator similar to a
+    sin, but let it be.
     """
-    formula = lambda s, col: math.cos(s.phase + s.frequency * col)
+    def formula(self, col):
+        return math.cos(self.phase + self.frequency * col)
 
 
 ZERO_ONE_OPERATOR = ZERO_OPERATOR | OneArityOperator

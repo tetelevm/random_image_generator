@@ -4,8 +4,8 @@ Operators with arity 2.
 Take 2 colors and mix them in some way. Owns two 0/1 arity operators,
 which calculate the initial colors.
 
-In this version the values (r, g, b) do not intersect each other and are
-calculated separately, but this will change in the future.
+Adds a shift by colors, that is, for two colors [rgb] + [RGB] can mix as
+([rR gG bB], [rG gB bR], [rB gR bG]).
 """
 
 from abc import ABC, abstractmethod
@@ -18,9 +18,10 @@ class TwoArityOperator(Operator, ABC):
     """
     This is a two-level operator.
 
-    Modifies and mixes the original values using the `func` function.
+    Modifies and mix the original values using the formula from the
+    `formula` method.
 
-    Has a `first_col`, `second_col` that generates the original value.
+    Has two colors that were originally generated.
     """
 
     arity = 2
@@ -34,6 +35,9 @@ class TwoArityOperator(Operator, ABC):
 
     @abstractmethod
     def formula(self, col_1: float, col_2: float) -> float:
+        """
+        The formula by which the two channels of colors are mixed.
+        """
         pass
 
     def func(self, first_col: COLOR_TYPE, second_col: COLOR_TYPE) -> COLOR_TYPE:
@@ -54,6 +58,8 @@ class TwoArityOperator(Operator, ABC):
 class Sum(TwoArityOperator):
     """
     Calculates the average between the two colors.
+    Slightly decreases the brightness of the color because it mixed
+    values.
     """
     def formula(self, col_1, col_2):
         return (col_1 + col_2) / 2
@@ -70,6 +76,8 @@ class Product(TwoArityOperator):
 class Mod(TwoArityOperator):
     """
     Calculates the mod of one color relative to another.
+    It decreases the brightness of the color, making it more like gray
+    color (0.0), as it multiplies the fractional values by each other.
     """
     def formula(self, col_1, col_2):
         if col_2 == 0:
@@ -78,6 +86,12 @@ class Mod(TwoArityOperator):
 
 
 class Exponentiation(TwoArityOperator):
+    """
+    It changes the color by multiplying one color by a degree of
+    another. The color sign is taken from the second color sign.
+    It increases the brightness of the color, almost always giving
+    brightness (< -0.5) | (> 0.5).
+    """
     def formula(self, col_1, col_2):
         col_1 = abs(col_1)
         if col_2 < 0:

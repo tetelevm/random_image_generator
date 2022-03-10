@@ -57,7 +57,6 @@ class OperatorManager(ABCMeta):
         """
         A method for getting a random object to all operators.
         """
-
         return mcs._current_random
 
     @classmethod
@@ -65,7 +64,6 @@ class OperatorManager(ABCMeta):
         """
         A method for setting a random object to all operators.
         """
-
         mcs._current_random = random_generator
 
     @classmethod
@@ -73,7 +71,6 @@ class OperatorManager(ABCMeta):
         """
         Sorted list of operators with `arity = 0`.
         """
-
         return sorted(mcs.operators_flat, key=lambda x: x.__name__)
 
     @classmethod
@@ -81,7 +78,6 @@ class OperatorManager(ABCMeta):
         """
         Sorted list of operators with `arity > 0`.
         """
-
         return sorted(mcs.operators_dimensional, key=lambda x: x.__name__)
 
 
@@ -110,7 +106,6 @@ class Operator(ABC, metaclass=OperatorManager):
         """
         Creates additional arguments that the operator needs.
         """
-
         pass
 
     def __str_extra_args__(self) -> list[str]:
@@ -118,7 +113,6 @@ class Operator(ABC, metaclass=OperatorManager):
         Converts to string form the additional arguments that are needed
         to duplicate the operator.
         """
-
         return []
 
     def __str__(self):
@@ -130,6 +124,13 @@ class Operator(ABC, metaclass=OperatorManager):
         return f"{self.__class__.__name__}({args_str})"
 
     def to_print(self, sym="\t", _nesting: int = 0) -> str:
+        """
+        A method similar to `.__str__()`, but returns the result in
+        formatted form. It adds line breaks and indents.
+        Parameter `sym` defines the indent, by default it is one tab,
+        you can change it to spaces.
+        """
+
         indent = sym * _nesting
 
         args = [
@@ -153,7 +154,6 @@ class Operator(ABC, metaclass=OperatorManager):
         """
         A common instance of random from a metaclass.
         """
-
         return cls.__class__.get_random()
 
     @abstractmethod

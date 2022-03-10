@@ -5,9 +5,8 @@ Take 3 colors and mix them in some way. Own the three 0/1/2 arity
 operators, which calculate the original colors. The second and third
 colors are mixed, and the third comes as a filter for them.
 
-In this version the values (r, g, b) do not intersect each other and are
-calculated separately, but this will change in the future (and is more
-of a bug right now).
+Adds a shift by colors, that is, for three colors [rgb] + [RGB] + [`r`g`b]
+can mix as ([rR`r gG`g bB`b], [rG`b gB`r bR`g], [rB`g gR`b bG`r]).
 """
 
 from abc import ABC, abstractmethod
@@ -20,10 +19,10 @@ class ThreeArityOperator(Operator, ABC):
     """
     This is a three-level operator.
 
-    Modifies and mixes the values from the suboperators using the
-    mathematical formula described in the `func` function.
+    Modifies and mix the original values using the formula from the
+    `formula` method.
 
-    Has three suboperators that calculate the original color values.
+    Has three colors that were originally generated.
     """
 
     arity = 3
@@ -37,6 +36,9 @@ class ThreeArityOperator(Operator, ABC):
 
     @abstractmethod
     def formula(self, col_1: float, col_2: float, col_3: float) -> float:
+        """
+        The formula by which the three channels of colors are mixed.
+        """
         pass
 
     def func(
@@ -75,7 +77,6 @@ class Level(ThreeArityOperator):
     """
     Selects one of two colors depending on the value of the third color.
     """
-
     def __self_init__(self):
         super().__self_init__()
         self.treshold = self.random.uniform(-1.0, 1.0)
@@ -89,19 +90,22 @@ class Level(ThreeArityOperator):
 
 class Mix(ThreeArityOperator):
     """
-    Calculates the average between the two colors (must initially mix
-    these colors with a third color).
+    Mixes two colors in proportions of the third color.
     """
-
     def formula(self, col_1, col_2, col_3):
         w = 0.5 * (col_1 + 1.0)
         return w * col_2 + (1 - w) * col_3
 
 
 class LineAvg(ThreeArityOperator):
+    """
+    Draws a decreasing line through the coordinates (-1 x, max_color y)
+    and (1 x, min_color y) and finds the x-location of y-avg_color on it.
+    """
     def formula(self, col_1, col_2, col_3):
         mi, av, ma = sorted([col_1, col_2, col_3])
         if ma - mi == 0:
+            # if all colors are the same
             return 0.0
         return (ma + mi - 2 * av) / (ma - mi)
 
