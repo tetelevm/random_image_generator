@@ -5,8 +5,6 @@ given phrase. Example:
 
 ![img.png](img.png "Phrase for the image (complexity 138)")
 
-_"Phrase for the image (complexity 138)"_
-
 ## Description
 
 This was originally a script [translated][original] from OCalm to Python.
@@ -17,6 +15,8 @@ Little changes have been made here:
 - the program uses `PIL` to display the pixels
 
 - added shell arguments
+
+- added new operators
 
 
 The idea of generation is to create an art and then calculate it. Art is a huge
