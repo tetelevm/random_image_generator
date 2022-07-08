@@ -38,7 +38,7 @@ Python3.7 simply by removing the type annotations. The simplest example of
 running the generator:
 
 ```
-python3.10 ./randomart.py
+python3.10 main.py
 ```
 
 This will generate several 512x512 px images (one in each folder) from the
@@ -47,7 +47,7 @@ supports some arguments:
 
 - `path` -  the path to the default directory. The directory must contain the
 file 'text'/'text.txt' (although `path` can also point directly to the file).
-The default directory is where `randomart.py` is.
+The default directory is where `main.py` is.
 
 - `target` - path to the target directory where the images will be generated.
 Can be absolute or just a name (then applied to `path`). The default is 'data'.
@@ -64,7 +64,7 @@ generates by it, else it tries to read the phrase file.
 Example of a more complex generator start:
 
 ```
-python3.10 ./randomart.py \
+python3.10 main.py \
     -size 512 -phraze "Universe Great Love" \
     -complexity 100 \
     -path /home/user/randomart \
