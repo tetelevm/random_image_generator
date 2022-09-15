@@ -31,6 +31,9 @@ random values in the art if they are generated during the calculation of the
 art, but you can if the values are generated during creation. Ideally, the art
 should be able to be output as a string.
 
+There is [a brief article][article] that describes how it works (the article
+is in Russian).
+
 ## Running
 
 This version is written for Python3.10, but it can easily be downgraded to
@@ -72,3 +75,4 @@ python3.10 main.py \
 ```
 
 [original]: http://math.andrej.com/2010/04/21/random-art-in-python/
+[article]: https://github.com/tetelevm/articles/blob/main/russian/%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80_%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9/%D1%81%D1%82%D0%B0%D1%82%D1%8C%D1%8F.md
