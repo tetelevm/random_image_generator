@@ -90,7 +90,7 @@ class Hyperbole(OneArityOperator):
     A hyperbolic function that changes its value at point 0.
     """
     def formula(self, col):
-        return (1 if col >= 0 else -1) * (1 - abs(col) ** 0.5) ** 2
+        return (1 if col >= 0 else -1) * (1.000001 - abs(col) ** 0.5) ** 2
 
 
 class Circle(OneArityOperator):
@@ -98,7 +98,7 @@ class Circle(OneArityOperator):
     The first and third quarter of the circle.
     """
     def formula(self, col):
-        return (1 if col >= 0 else -1) * (1 - col ** 2) ** 0.5
+        return (1 if col >= 0 else -1) * (1.000001 - col ** 2) ** 0.5
 
 
 class Arror(OneArityOperator):
