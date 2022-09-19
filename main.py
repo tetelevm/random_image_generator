@@ -1,11 +1,12 @@
-# version 1.2
-
 """
 The entry point to the generator.
 Responsible for the interaction of the other parts of the system.
 """
 
 from implementers import ImageManager, Generator
+
+
+__version__ = "1.3.0"
 
 
 def main():

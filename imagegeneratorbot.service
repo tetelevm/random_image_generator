@@ -1,0 +1,14 @@
+[Unit]
+Description=Bot for generating random images
+After=network.target
+
+[Service]
+ExecStart=/root/envs/bots/bin/python3.8 bot.py
+ExecReload=/root/envs/bots/bin/python3.8 bot.py
+WorkingDirectory=/opt/random_image_generator/
+KillMode=control-group
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

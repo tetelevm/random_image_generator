@@ -62,7 +62,7 @@ class Generator:
             *range(*cls.complexity_interval, 2),
         ]
 
-    def create_image(self, phrase: str, complexity: int) -> Image:
+    def create_image(self, phrase: str, complexity: int, size=None) -> Image:
         """
         Sets the state of random, generates art and with it the image.
         """
@@ -70,7 +70,8 @@ class Generator:
         self.random = Random(phrase)
         OperatorManager.set_random(self.random)
         art = self.generate_art(complexity)
-        return self.draw(art, self.size)
+        size = size or self.size
+        return self.draw(art, size)
 
     def generate_art(self, complexity: int) -> Operator:
         """
@@ -142,10 +143,9 @@ class Generator:
         # the dot in the upper left corner.
         for x in range(size):
             for y in range(size):
-                rgb = art.eval(
-                    2 * x / size - 1,
-                    2 * y / size - 1,
-                )
+                x_pos = 2 * x / size - 1
+                y_pos = 2 * y / size - 1
+                rgb = art.eval(x_pos, y_pos)
                 img.putpixel((x, y), cls.normalize_color(*rgb))
 
         return img
