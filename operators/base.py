@@ -6,6 +6,7 @@ operators, and a couple of tools for easy code writing.
 from __future__ import annotations
 from random import Random
 from abc import ABC, ABCMeta, abstractmethod
+from typing import Type
 
 
 __all__ = [
@@ -35,8 +36,8 @@ class OperatorManager(ABCMeta):
     arity: int
     _current_random: Random = Random()
 
-    operators_flat: list[OperatorManager] = []
-    operators_dimensional: list[OperatorManager] = []
+    operators_flat: list[Type[Operator]] = []
+    operators_dimensional: list[Type[Operator]] = []
 
     def __new__(mcs, clsname, bases, dct):
         cls = super().__new__(mcs, clsname, bases, dct)
@@ -155,6 +156,9 @@ class Operator(ABC, metaclass=OperatorManager):
         A common instance of random from a metaclass.
         """
         return cls.__class__.get_random()
+
+    def formula(self, *cols: float) -> float:
+        pass
 
     @abstractmethod
     def func(self, *colors: COLOR_TYPE) -> COLOR_TYPE:

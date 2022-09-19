@@ -82,7 +82,7 @@ class Tent(OneArityOperator):
     (0;1)-(1;-1)).
     """
     def formula(self, col):
-        return 1 - 2 * abs(col)
+        return 1 - min(abs(col), 1)
 
 
 class Hyperbole(OneArityOperator):
@@ -90,7 +90,7 @@ class Hyperbole(OneArityOperator):
     A hyperbolic function that changes its value at point 0.
     """
     def formula(self, col):
-        return (1 if col >= 0 else -1) * (1.000001 - abs(col) ** 0.5) ** 2
+        return (1 if col >= 0 else -1) * (1 - abs(col) ** 0.5) ** 2
 
 
 class Circle(OneArityOperator):
@@ -98,7 +98,7 @@ class Circle(OneArityOperator):
     The first and third quarter of the circle.
     """
     def formula(self, col):
-        return (1 if col >= 0 else -1) * (1.000001 - col ** 2) ** 0.5
+        return (1 if col >= 0 else -1) * (1 - min(abs(col), 1) ** 2) ** 0.5
 
 
 class Arror(OneArityOperator):
@@ -135,11 +135,11 @@ class SplitParabola(OneArityOperator):
     """
     def formula(self, col):
         if col < -0.5:
-            return 4 * (col + 0.5)**2
+            return 4 * (max(col, -1) + 0.5)**2
         if -0.5 <= col < 0.5:
             return 4 * col**2 - 1
         if col >= 0.5:
-            return 4 * (col - 0.5)**2
+            return 4 * (min(col, 1) - 0.5)**2
 
 
 class Star(OneArityOperator):

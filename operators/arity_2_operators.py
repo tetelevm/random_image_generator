@@ -62,7 +62,7 @@ class Sum(TwoArityOperator):
     values.
     """
     def formula(self, col_1, col_2):
-        return (col_1 + col_2) / 2
+        return (col_1 + col_2) / 2.02
 
 
 class Product(TwoArityOperator):
@@ -70,7 +70,7 @@ class Product(TwoArityOperator):
     Multiplies one color by another.
     """
     def formula(self, col_1, col_2):
-        return col_1 * col_2
+        return col_1 * col_2 / 1.0201
 
 
 class Mod(TwoArityOperator):
@@ -93,7 +93,7 @@ class Exponentiation(TwoArityOperator):
     brightness (< -0.5) | (> 0.5).
     """
     def formula(self, col_1, col_2):
-        col_1 = abs(col_1)
+        col_1 = min(abs(col_1), 1)
         if col_2 < 0:
             return - col_1 ** abs(col_2)
         else:
