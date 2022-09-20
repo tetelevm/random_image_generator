@@ -10,6 +10,7 @@ can mix as ([rR`r gG`g bB`b], [rG`b gB`r bR`g], [rB`g gR`b bG`r]).
 """
 
 from abc import ABC, abstractmethod
+from typing import Tuple, List, Union
 
 from .base import Operator, operator_subclass_names, COLOR_TYPE
 from .arity_2_operators import ZERO_ONE_TWO_OPERATOR
@@ -26,12 +27,12 @@ class ThreeArityOperator(Operator, ABC):
     """
 
     arity = 3
-    suboperators: tuple[ZERO_ONE_TWO_OPERATOR]
+    suboperators: Tuple[ZERO_ONE_TWO_OPERATOR]
 
     def __self_init__(self):
         self.shift = self.random.randint(0, 2)
 
-    def __str_extra_args__(self) -> list[str]:
+    def __str_extra_args__(self) -> List[str]:
         return [f"shift={self.shift}"]
 
     @abstractmethod
@@ -110,6 +111,6 @@ class LineAvg(ThreeArityOperator):
         return (ma + mi - 2 * av) / (ma - mi)
 
 
-ZERO_ONE_TWO_THREE_OPERATOR = ZERO_ONE_TWO_OPERATOR | ThreeArityOperator
+ZERO_ONE_TWO_THREE_OPERATOR = Union[ZERO_ONE_TWO_OPERATOR, ThreeArityOperator]
 
 __all__ = operator_subclass_names(locals())

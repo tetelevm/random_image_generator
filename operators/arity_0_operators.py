@@ -7,6 +7,7 @@ which value the value will be used for the color - x/y/c.
 
 from abc import ABC
 from itertools import product
+from typing import List
 
 from .base import OperatorManager, Operator, operator_subclass_names
 
@@ -19,7 +20,7 @@ class ZeroArityOperator(Operator, ABC):
     """
 
     arity = 0
-    xyc_index: list[int]
+    xyc_index: List[int]
 
     def __self_init__(self):
         self.value = self.random.uniform(-1, 1)

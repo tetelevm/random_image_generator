@@ -6,7 +6,7 @@ operators, and a couple of tools for easy code writing.
 from __future__ import annotations
 from random import Random
 from abc import ABC, ABCMeta, abstractmethod
-from typing import Type
+from typing import Type, Tuple
 
 
 __all__ = [
@@ -19,7 +19,7 @@ __all__ = [
 
 # Value in the range [-1; 1]
 PIXEL_RANGE = float
-COLOR_TYPE = tuple[PIXEL_RANGE, PIXEL_RANGE, PIXEL_RANGE]
+COLOR_TYPE = Tuple[PIXEL_RANGE, PIXEL_RANGE, PIXEL_RANGE]
 
 
 class OperatorManager(ABCMeta):
@@ -40,7 +40,7 @@ class OperatorManager(ABCMeta):
     operators_dimensional: list[Type[Operator]] = []
 
     def __new__(mcs, clsname, bases, dct):
-        cls = super().__new__(mcs, clsname, bases, dct)
+        cls: Type[Operator] = super().__new__(mcs, clsname, bases, dct)
 
         # Adding a new operator to the list of all operators
         if ABC not in bases:
@@ -149,13 +149,12 @@ class Operator(ABC, metaclass=OperatorManager):
 
         return f"{indent}{self.__class__.__name__}({args_str})"
 
-    @classmethod
     @property
-    def random(cls) -> Random:
+    def random(self) -> Random:
         """
         A common instance of random from a metaclass.
         """
-        return cls.__class__.get_random()
+        return self.__class__.__class__.get_random()
 
     def formula(self, *cols: float) -> float:
         pass

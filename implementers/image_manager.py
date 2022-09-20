@@ -6,7 +6,7 @@ Reads arguments, gets the necessary phrases, creates folders and the like.
 
 import re
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Union
 from argparse import ArgumentParser, Namespace
 
 
@@ -75,7 +75,7 @@ class ImageManager:
         return parser.parse_args()
 
     @staticmethod
-    def read_file(root_path: str | Path) -> Iterable[str]:
+    def read_file(root_path: Union[str, Path]) -> Iterable[str]:
         """
         Searches and reads the phrase file.
 

@@ -17,6 +17,7 @@ pyplot.show()
 
 import math
 from abc import ABC, abstractmethod
+from typing import Tuple, Union
 
 from .base import Operator, operator_subclass_names, COLOR_TYPE
 from .arity_0_operators import ZERO_OPERATOR
@@ -33,7 +34,7 @@ class OneArityOperator(Operator, ABC):
     """
 
     arity = 1
-    suboperators: tuple[ZERO_OPERATOR]
+    suboperators: Tuple[ZERO_OPERATOR]
 
     @abstractmethod
     def formula(self, col: float) -> float:
@@ -177,6 +178,6 @@ class Cos(TrigonometricOperator):
         return math.cos(self.phase + self.frequency * col)
 
 
-ZERO_ONE_OPERATOR = ZERO_OPERATOR | OneArityOperator
+ZERO_ONE_OPERATOR = Union[ZERO_OPERATOR, OneArityOperator]
 
 __all__ = operator_subclass_names(locals())

@@ -7,6 +7,7 @@ generates a picture.
 
 from random import Random
 from PIL import Image
+from typing import List, Tuple
 
 from operators import *
 
@@ -50,16 +51,14 @@ class Generator:
         random_local = Random(phrase)
         return random_local.randint(*cls.complexity_interval)
 
-    @classmethod
     @property
-    def all_complexities(cls) -> list[int]:
+    def all_complexities(self) -> List[int]:
         """
         Default complexities for generating images on all complexities.
         """
-
         return [
-            *range(1, cls.complexity_interval[0]),
-            *range(*cls.complexity_interval, 2),
+            *range(1, self.complexity_interval[0]),
+            *range(*self.complexity_interval, 2),
         ]
 
     def create_image(self, phrase: str, complexity: int, size=None) -> Image:
@@ -122,7 +121,7 @@ class Generator:
         return eval(art_string)
 
     @staticmethod
-    def normalize_color(r: float, g: float, b: float) -> tuple[int, int, int]:
+    def normalize_color(r: float, g: float, b: float) -> Tuple[int, int, int]:
         """
         Converts the color from the range [-1; 1] to the standard
         [0; 255].

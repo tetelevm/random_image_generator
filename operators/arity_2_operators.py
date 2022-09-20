@@ -9,6 +9,7 @@ Adds a shift by colors, that is, for two colors [rgb] + [RGB] can mix as
 """
 
 from abc import ABC, abstractmethod
+from typing import Tuple, List, Union
 
 from .base import Operator, operator_subclass_names, COLOR_TYPE
 from .arity_1_operators import ZERO_ONE_OPERATOR
@@ -25,12 +26,12 @@ class TwoArityOperator(Operator, ABC):
     """
 
     arity = 2
-    suboperators: tuple[ZERO_ONE_OPERATOR]
+    suboperators: Tuple[ZERO_ONE_OPERATOR]
 
     def __self_init__(self):
         self.shift = self.random.randint(0, 2)
 
-    def __str_extra_args__(self) -> list[str]:
+    def __str_extra_args__(self) -> List[str]:
         return [f"shift={self.shift}"]
 
     @abstractmethod
@@ -100,6 +101,6 @@ class Exponentiation(TwoArityOperator):
             return col_1 ** col_2
 
 
-ZERO_ONE_TWO_OPERATOR = ZERO_ONE_OPERATOR | TwoArityOperator
+ZERO_ONE_TWO_OPERATOR = Union[ZERO_ONE_OPERATOR, TwoArityOperator]
 
 __all__ = operator_subclass_names(locals())
