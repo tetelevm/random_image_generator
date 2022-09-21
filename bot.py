@@ -7,7 +7,7 @@ from io import BytesIO
 from multiprocessing import Process, Queue, Manager
 from queue import Empty
 from pathlib import Path
-from typing import Dict, Callable, Coroutine
+from typing import Tuple, Dict, Callable, Coroutine
 
 from telegram import Update, Chat
 from telegram.constants import ParseMode
@@ -66,7 +66,7 @@ class Bot:
     def __init__(self, token: str):
         self.token = token
         self.generator = Generator()
-        self.callbacks: Dict[int, Callable] = dict()
+        self.callbacks: Dict[int, Tuple[Callable, Coroutine]] = dict()
 
         manager = Manager()
         self.queue_small = manager.Queue()
@@ -107,10 +107,19 @@ class Bot:
 
         while True:
             (user_id, text, size) = queue.get()
-            log(f"F start generation <{size}>/<{text}>")
-            bytes_image = self._generate_image(text, size)
-            log(f"F generated <{size}>/<{text}>")
-            self.queue_ready.put_nowait((user_id, bytes_image, text))
+            log(f" F start generation <{size}>/<{text}>")
+
+            try:
+                bytes_image = self._generate_image(text, size)
+                msg = f" F generated <{size}>/<{text}>"
+                succ = True
+            except:
+                bytes_image = b""
+                msg = f"ERROR! Not generated image <{size}>/<{text}>"
+                succ = False
+
+            log(msg)
+            self.queue_ready.put_nowait((user_id, bytes_image, text, succ))
 
     @staticmethod
     async def _send_image_as_photo(chat: Chat, bytes_png, text):
@@ -127,6 +136,12 @@ class Bot:
         filename = re.sub(r"[^\wА-ЯЁа-яё \-]", "", text)[:20]
         filename = (filename or "image") + ".png"
         await chat.send_document(bytes_png, caption=text, filename=filename)
+
+    async def _send_error_message(self, chat: Chat):
+        """
+        Sends an error message to the desired chat room.
+        """
+        await chat.send_message(self.messages["error"])
 
     # =================================================================
 
@@ -151,6 +166,7 @@ class Bot:
         ),
         "busy": "🕓 I'm already generating, wait for the result.",
         "no_reply": "🐞 You need to reply to a message with a text!",
+        "error": "🐞 An error occurred during generation.",
     }
 
     async def command_start(self, update: Update, context: CallbackContext):
@@ -185,7 +201,8 @@ class Bot:
         self.queue_small.put_nowait((user_id, text, 128))
 
         callback = partial(self._send_image_as_photo, update.effective_chat)
-        self.callbacks[user_id] = callback
+        error_coro = self._send_error_message(update.effective_chat)
+        self.callbacks[user_id] = (callback, error_coro)
 
     async def get_big_image(self, update: Update, context: CallbackContext):
         """
@@ -210,7 +227,8 @@ class Bot:
         self.queue_big.put_nowait((user_id, text, 512))
 
         callback = partial(self._send_image_as_document, update.effective_chat)
-        self.callbacks[user_id] = callback
+        error_coro = self._send_error_message(update.effective_chat)
+        self.callbacks[user_id] = (callback, error_coro)
 
     async def start_bot(self):
         """
@@ -240,12 +258,16 @@ class Bot:
         while True:
             await asyncio.sleep(1)
             try:
-                (user_id, image, text) = self.queue_ready.get_nowait()
+                (user_id, image, text, succ) = self.queue_ready.get_nowait()
             except Empty:
                 continue
 
-            coro = self.callbacks.pop(user_id)
-            asyncio.create_task(coro(image, text))
+            callback, error_coro = self.callbacks.pop(user_id)
+            if succ:
+                asyncio.create_task(callback(image, text))
+                error_coro.close()
+            else:
+                asyncio.create_task(error_coro)
 
 
 async def run_bot(*coros: Coroutine):
