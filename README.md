@@ -36,9 +36,8 @@ is in Russian).
 
 ## Running
 
-This version is written for Python3.10, but it can easily be downgraded to
-Python3.7 simply by removing the type annotations. The simplest example of
-running the generator:
+This version is written for Python3.8+, and the simplest example of running the
+generator:
 
 ```
 python3.10 main.py
@@ -73,6 +72,28 @@ python3.10 main.py \
     -path /home/user/randomart \
     -target images
 ```
+
+## Bot
+
+The project has the option to run as a telegram bot. The bot works in 3
+processes (one main and two for generation) and is able to generate images by
+phrase.
+
+Bot works in 2 modes: generation of small images and generation of large images.
+For small, you just need to write a phrase to generate the bot, and it will send
+a small (128px) image in response (convenient to use as a preview). For large
+images you have to reply to a message with the command `/big`. The bot will
+generate a (very long) image of 512px and send it as a document.
+
+To start the bot you need to:
+- install the necessary libraries (`pip3 install -r requirements.txt`)
+- copy the file `.envs_example` as file `.envs` and write your bot's token into it
+- call the command `python3 bot.py` (not needed if you run it on a server)
+
+To run on the hosting server (which is assumed to be linux), the file
+`imagegeneratorbot.service` is created. It must be copied to `/lib/systemd/system/`
+and  run two commands: `systemctl enable imagegeneratorbot.service` and
+`systemctl start imagegeneratorbot.service`.
 
 [original]: http://math.andrej.com/2010/04/21/random-art-in-python/
 [article]: https://github.com/tetelevm/articles/blob/main/russian/%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80_%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9/%D1%81%D1%82%D0%B0%D1%82%D1%8C%D1%8F.md
