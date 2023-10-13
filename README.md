@@ -67,7 +67,8 @@ Example of a more complex generator start:
 
 ```
 python3.10 main.py \
-    -size 512 -phraze "Universe Great Love" \
+    -phrase "Universe Great Love" \
+    -size 512 \
     -complexity 100 \
     -path /home/user/randomart \
     -target images

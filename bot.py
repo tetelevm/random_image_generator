@@ -214,6 +214,7 @@ class Bot:
         if (
                 not update.message.reply_to_message
                 or not update.message.reply_to_message.text
+                or not update.message.reply_to_message.caption
         ):
             await update.effective_chat.send_message(self.messages["no_reply"])
             return
@@ -223,7 +224,10 @@ class Bot:
             await update.effective_chat.send_message(self.messages["busy"])
             return
 
-        text = update.message.reply_to_message.text
+        text = (
+            update.message.reply_to_message.text
+            or update.message.reply_to_message.caption
+        )
         self.queue_big.put_nowait((user_id, text, 512))
 
         callback = partial(self._send_image_as_document, update.effective_chat)
